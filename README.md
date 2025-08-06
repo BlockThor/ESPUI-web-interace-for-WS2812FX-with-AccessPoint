@@ -25,10 +25,10 @@ Ideal for offline light installations, quick demos, or portable LED projects.
 
 ## ToDo
 
-[ ] Timer for switch-off WiFi  
-[ ] Time for On-Off LED (night mode???)   
-[ ] Settings: IP Address   
-[ ] Master/Slave (in case two sets)
+- [ ]  Timer for switch-off WiFi
+- [ ]  Time for On-Off LED (night mode???)   
+- [ ]  Settings: IP Address   
+- [ ]  Master/Slave (in case two sets)
 
 
 ## Tested with:
