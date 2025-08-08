@@ -34,17 +34,18 @@ void speedSliderCall(Control* sender, int type)
 void saveHardCall(Control* sender, int type)
 {
   if (type == B_UP) {
+    lamp.stop();
     int n = ESPUI.getControl(pinNumber)->value.toInt();
     lampParam.LEDPIN = n;
     lamp.setPin(n);
     n = ESPUI.getControl(ledNumber)->value.toInt();
-    lamp.fill(0, 0, lamp.getLength()); // clear all LEDs before change length  TODO: Not work!
     lampParam.LEDCOUNT = n;
     lamp.setLength(n);
+    lamp.start();
     updateStatusLine();
     ESPUI.setElementStyle(sender->id, CSS_SAVEBUTTON_STYLE);
   } else {
-    ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + "border-bottom:4px solid #E91E63; background-color:#3F51b5;");
+    ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + CSS_SAVEBUTTON_DOWN_STYLE);
   }
 }
 
@@ -52,19 +53,19 @@ void enterWifiDetailsCallback(Control *sender, int type) {
   if (type == B_UP) {
     DEBUGN("Saving credentials WiFi...");
     String _ssid = ESPUI.getControl(wifi_ssid_text)->value;
+    DEBUG2N("SSID:", _ssid);
     String _pass = ESPUI.getControl(wifi_pass_text)->value;
-
-    DEBUG2N("SSID:",_ssid);
-    //    DEBUG2N("Pass:",_pass);
+    DEBUG2N("Pass:", _pass);
     if (_ssid == "") { // AP WiFi name can't be empty - set default
       DEBUGN("set credentials to default");
       memset(wifidata.wifiPass, 0, sizeof(wifidata.wifiPass) - 1); // clear name
       memset(wifidata.wifiPass, 0, sizeof(wifidata.wifiPass) - 1); // clear password
+
     } else {
       _ssid.toCharArray(wifidata.wifiSSID, sizeof(wifidata.wifiSSID) - 1);
       _pass.toCharArray(wifidata.wifiPass, sizeof(wifidata.wifiPass) - 1);
     }
-    DEBUG2N("SSID:",wifidata.wifiSSID);
+    DEBUG2N("SSID:", wifidata.wifiSSID);
     //    DEBUG2N("Pass:",wifidata.wifiPass);
   }
   saveCredentials();
@@ -73,8 +74,10 @@ void enterWifiAPDetailsCallback(Control *sender, int type) {
   if (type == B_UP) {
     DEBUGN("Saving credentials WiFi AP...");
     String _ssid = ESPUI.getControl(wifiap_ssid_text)->value;
+    DEBUG2N("SSID:", _ssid);
     String _pass = ESPUI.getControl(wifiap_pass_text)->value;
-    String _ip = ESPUI.getControl(wifi_ip_text)->value;
+    DEBUG2N("Pass:", _pass);
+    //    String _ip = ESPUI.getControl(wifi_ip_text)->value;
     if (_ssid == "") { // AP WiFi name can't be empty - set default
       DEBUGN("set credentials to default");
 #if defined(ESP32)
@@ -85,21 +88,27 @@ void enterWifiAPDetailsCallback(Control *sender, int type) {
       snprintf(wifidata.wifiSSID_Ap, 20, WIFI_AP_SSID, chipid); // default WiFi AP Name
       memset(wifidata.wifiPass_Ap, 0, sizeof(wifidata.wifiPass_Ap) - 1); // clear password
       _ssid = String(wifidata.wifiSSID_Ap);
+      ESPUI.updateControlValue(wifiap_ssid_text, _ssid);
     } else {
       _ssid.toCharArray(wifidata.wifiSSID_Ap, sizeof(wifidata.wifiSSID_Ap) - 1);
       _pass.toCharArray(wifidata.wifiPass_Ap, sizeof(wifidata.wifiPass_Ap) - 1);
     }
-    DEBUG2N("SSID:",_ssid);
+    DEBUG2N("SSID:", _ssid);
     //    DEBUGN(_pass);
+    saveCredentials();
+    ESPUI.setElementStyle(sender->id, CSS_SAVEBUTTON_STYLE);
+//    ESP.restart();
+  } else {
+    ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + CSS_SAVEBUTTON_DOWN_STYLE);
   }
-  saveCredentials();
 }
-void restartCall(Control* sender, int type)
+
+void restartCall(Control * sender, int type)
 {
   switch (type)
   {
     case B_DOWN:
-      ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + "border-bottom:4px solid #E91E63; background-color:#3F51b5;");
+      ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + CSS_SAVEBUTTON_DOWN_STYLE);
       break;
 
     case B_UP:
@@ -109,7 +118,7 @@ void restartCall(Control* sender, int type)
   }
 }
 
-void resetCall(Control* sender, int type) {
+void resetCall(Control * sender, int type) {
   DEBUGN("Reset");
   unsigned long currentMillis = millis();
   static unsigned long oldMillis = 0;
@@ -117,8 +126,8 @@ void resetCall(Control* sender, int type) {
   switch (type) {
     case B_DOWN:
       oldMillis = millis();
-      ESPUI.setPanelStyle(sender->id, "color:red;"); // Red Panel Name.
-      ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + "border-bottom:4px solid #E91E63; background-color:#3F51b5;");
+      ESPUI.setPanelStyle(sender->id, CSS_ALARM_PANEL_STYLE); // Red Panel Name.
+      ESPUI.setElementStyle(sender->id, String(CSS_SAVEBUTTON_STYLE) + CSS_SAVEBUTTON_DOWN_STYLE);
       break;
 
     case B_UP:
@@ -136,12 +145,12 @@ void resetCall(Control* sender, int type) {
   }
 }
 // - - -
-void numberCall(Control* sender, int type)
+void numberCall(Control * sender, int type)
 {
   DEBUG2N("Number", sender->value);
 }
 
-void textCall(Control* sender, int type)
+void textCall(Control * sender, int type)
 {
   DEBUG2N("Text: ID: ", sender->id);
   DEBUG2N(", Value: ", sender->value);
@@ -180,7 +189,7 @@ void selectFadeCall(Control * sender, int value)
   DEBUG2N(", Int: ", p);
 }
 // S W I T C H s
-void switchReversCall(Control* sender, int value)
+void switchReversCall(Control * sender, int value)
 {
   uint8_t opts = lamp.getOptions(0);
   if (value == S_ACTIVE) {
@@ -193,19 +202,17 @@ void switchReversCall(Control* sender, int value)
   DEBUG2X("Reversed: ", lamp.getOptions(0) & 0x80);
   DEBUG2("  ", (((lamp.getOptions(0) & 0x80)  == 128) ? "1" : "0"));
 }
-void switchPowerCall(Control* sender, int value)
+void switchPowerCall(Control * sender, int value)
 {
   if (value == S_ACTIVE) {
     lamp.start();
-    //    ESPUI.setEnabled(statusLine, true);
   } else {
     lamp.stop();
-    //    ESPUI.setEnabled(statusLine, false);
   }
   updateStatusLine();
 }
 
-void switchAutoCall(Control* sender, int value)
+void switchAutoCall(Control * sender, int value)
 {
 
   if (value == S_ACTIVE) {
@@ -218,7 +225,7 @@ void switchAutoCall(Control* sender, int value)
       }
     }
   } else {
-    if (switchAutoPlay[0] != sender->id) { // if unswitch any mode -> switch on StopSutoPlay
+    if (switchAutoPlay[0] != sender->id) { // if unswitch any mode -> switch on StopAutoPlay
       ESPUI.updateControlValue(switchAutoPlay[0], "1" );
       lampParam.PLAYMODE = 0;
       auto_last_change = 0;
@@ -242,10 +249,10 @@ void monoModeCall(Control * sender, int type, void* param)
     disableAutoPlay();
     lampParam.MODE = lamp.getMode();
     lampParam.PLAYMODE = P_NONE;
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_UP_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_UP_STYLE);
     updateStatusLine();
   } else {
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_DW_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_DW_STYLE);
   }
 }
 void duoModeCall(Control * sender, int type, void* param)
@@ -256,10 +263,10 @@ void duoModeCall(Control * sender, int type, void* param)
     setColorMode(COLORMODE_DUO);
     //    lampParam.COLORMODE = COLORMODE_DUO;
     disableAutoPlay();
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_UP_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_UP_STYLE);
     updateStatusLine();
   } else {
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_DW_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_DW_STYLE);
   }
 }
 void rgbModeCall(Control * sender, int type, void* param)
@@ -270,10 +277,10 @@ void rgbModeCall(Control * sender, int type, void* param)
     setColorMode(COLORMODE_RGB);
     //    lampParam.COLORMODE = COLORMODE_RGB;
     disableAutoPlay();
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_UP_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_UP_STYLE);
     updateStatusLine();
   } else {
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_DW_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_DW_STYLE);
   }
 }
 void specModeCall(Control * sender, int type, void* param)
@@ -284,10 +291,10 @@ void specModeCall(Control * sender, int type, void* param)
     setColorMode(COLORMODE_DUO);
     //    lampParam.COLORMODE = COLORMODE_DUO;
     disableAutoPlay();
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_UP_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_UP_STYLE);
     updateStatusLine();
   } else {
-    ESPUI.setElementStyle(sender->id, CSS_BTTN_DW_STYLE);
+    ESPUI.setElementStyle(sender->id, CSS_SHOWBUTTON_DW_STYLE);
   }
 }
 

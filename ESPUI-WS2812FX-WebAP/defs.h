@@ -2,24 +2,34 @@
 
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
 
-#define HTML_TITLE "MOODLAMP with WS2812FX</br><small>MOODnPARTY edition</small>"
-#define CSS_BTTN_STYLE  "font-size:1.6rem;min-height:4rem;padding:1rem;margin:3px;border:2px solid #404040;border-radius:5px;"
-#define CSS_BTTN_DW_STYLE String(CSS_BTTN_STYLE) + "color:#999;background-color: #222;"
-#define CSS_BTTN_UP_STYLE String(CSS_BTTN_STYLE) + "color:#222;background-color: #bbb;"
+#define STR_VERSION       "v0.1.1"
+#define STR_AUTHOR        "by Vasyl Yudin"
+#define STR_BLD_DATE      "Aug-2025"
+#define HTML_TITLE        "MOODLAMP with WS2812FX</br><small>MOODnPARTY edition</small>"
+#define HTML_ICON         "<p> <img src=\"data:image/svg+xml,%3Csvg width='128' height='128' viewBox='-1 -1 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle style='stroke:%23000' cx='8' cy='8' r='8'/%3E%3Cpath d='M8 8h8c0-1.5-.4-2.8-1.1-4L8 8z' fill='%23F5AC43'/%3E%3Cpath d='m8 8-6.9 4c.7 1.2 1.7 2.2 2.9 2.9L8 8z' fill='%23515EBB'/%3E%3Cpath d='M8 8v8c1.5 0 2.8-.4 4-1.1L8 8z' fill='%23D0449A'/%3E%3Cpath d='M4 14.9c1.2.7 2.5 1.1 4 1.1V8l-4 6.9z' fill='%237C39B1'/%3E%3Cpath d='M14.9 4c-.7-1.2-1.7-2.2-2.9-2.9L8 8l6.9-4z' fill='%23F8CE33'/%3E%3Cpath d='M8 8H0c0 1.5.4 2.8 1.1 4L8 8z' fill='%23177AC3'/%3E%3Cpath d='m8 8 4 6.9c1.2-.7 2.2-1.7 2.9-2.9L8 8z' fill='%23FE4A29'/%3E%3Cpath d='m8 8 6.9 4c.7-1.2 1.1-2.5 1.1-4H8z' fill='%23F97932'/%3E%3Cpath d='M8 8 1.1 4C.4 5.2 0 6.5 0 8h8z' fill='%231AB3D0'/%3E%3Cpath d='m8 8 4-6.9C10.8.4 9.5 0 8 0v8z' fill='%23FCF222'/%3E%3Cpath d='M8 0C6.5 0 5.2.4 4 1.1L8 8V0z' fill='%2389D31C'/%3E%3Cpath d='M8 8 4 1.1C2.8 1.8 1.8 2.8 1.1 4L8 8z' fill='%2333B634'/%3E%3Ccircle style='stroke:%23fff;fill:%231976ff;paint-order:stroke' cx='8' cy='8' r='3'/%3E%3C/svg%3E\"></p>"
+
+#define HTML_GITHUB_REPO   "<a href=\"https://github.com/BlockThor/ESPUI-web-interace-for-WS2812FX-with-AccessPoint/\" target=\"_blank\">Click Here for Information</a>"
+
+#define CSS_SHOWBUTTON_STYLE  "font-size:1.6rem;min-height:4rem;padding:1rem;margin:3px;border:2px solid #404040;border-radius:5px;"
+#define CSS_SHOWBUTTON_DW_STYLE String(CSS_SHOWBUTTON_STYLE) + "color:#999;background-color: #222;"
+#define CSS_SHOWBUTTON_UP_STYLE String(CSS_SHOWBUTTON_STYLE) + "color:#222;background-color: #bbb;"
 #define CSS_TEXT_STYLE  "height:26px;width:180px;"
 #define CSS_TEXT_LABEL_STYLE  "margin-bottom: 0;font-size: 1.2em; background-color: unset; vertical-align: middle; text-align: left; width:55%"
 #define CSS_SELECT_STYLE  "width:60px;"
 #define CSS_SELECT_LABEL_STYLE  "font-size: 1.2em; background-color: unset; vertical-align: bottom; text-align: left; width:80%;margin-bottom: 3;"
 #define CSS_NUMBER_STYLE  "width:60px;"
 #define CSS_NUMBER_LABEL_STYLE  "font-size: 1.2em; background-color: unset; vertical-align: middle; text-align: left; width:80%"
-#define CSS_STATUS_STYLE  "font-size: 22px; font-variant-caps: small-caps; background-color: unset; color: #c4f0bb; "//-webkit-text-stroke: 1px black;
+#define CSS_STATUS_STYLE  "font-size: 1.6em;font-weight:400;font-variant-caps: small-caps; background-color: unset; color: #eee; "
 #define CSS_STATUS_PANEL_STYLE  "margin-left: auto; margin-right: auto;float: none;"
+#define CSS_ALARM_PANEL_STYLE  "color:red;"
 #define CSS_COLOR_STYLE   "min-height:40px;"
 #define CSS_CONTROL_LABEL_STYLE   "align-items: center; font-size: 1.2em; background-color: unset; vertical-align: middle; text-align: left; width:80%"
 //#define CSS_CONTROL_SWITCH_STYLE   "align-items: center; text-align: right;"
-#define CSS_SLIDER_LABEL_STYLE "font-size:1.2rem;font-weight:400;width:18%; background-color: unset;"//border: 1px solid black;
+#define CSS_SLIDER_LABEL_STYLE "font-size:1.2rem;font-weight:400;width:18%; background-color: unset;"
 #define CSS_SAVEBUTTON_STYLE  "margin:0 2rem 1rem;width:200px;outline:0; border:0; border-radius:4px; border-bottom:4px solid #2b6cb0;background-color:#4299e1; color:white;"
+#define CSS_SAVEBUTTON_DOWN_STYLE  "border-bottom:4px solid #E91E63; background-color:#3F51b5;"
 #define CSS_NO_BG_STYLE "background-color: unset;"
+#define CSS_VERYSPEC_STYLE "background: linear-gradient(170deg, rgba(22,22,222,1) 0%, rgba(22,22,222,1) 33%, white 50%, rgba(176,176,0,1) 66%, rgba(176,176,0,1) 100%); border-bottom: #000;"
 
 // - - D E F A U L T S - - 
 #define LED_COUNT 30
@@ -32,8 +42,8 @@
 #define TTC 60000 // Time_To_Connect to WiFi
 
 
-#include <WS2812FX.h>
-//#include <WS2812FX_MnP_edition.h>
+//#include <WS2812FX.h>
+#include <WS2812FX_MnP_edition.h>
 
 #define MAX_CLIENTS 4 
 #define WIFI_CHANNEL 6

@@ -18,8 +18,8 @@ void saveParameters() {
   uint8_t addr = sizeof(wifidata) + 2;
   EEPROM.put(addr, lampParam);
   if (EEPROM.commit()) {
-    Delay(10);
-    //    DEBUGN("Settings saved");;
+    delay(10);
+    DEBUGN("Settings saved");;
   } else {
     DEBUGN("EEPROM error");;
   }

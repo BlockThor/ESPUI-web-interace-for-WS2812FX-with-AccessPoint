@@ -1,11 +1,15 @@
 void Lamp_StartUp() {
   /**   -= = = = = =  SETUP LAMP  = = = = = =- **/
+#if DEBUGING
+  Serial.begin(115200);
+#endif
   DEBUGN("WS2812FX setup");
   lamp.init();
+  EEPROM.begin(512);
   //      initParameters(); // uncomment for manual init all parameters during development
   loadParameters();
 #ifdef ESP8266
-  if (lampParam.MAGIC ==  ESP.getChipId()) { // First start, need init ?
+  if (lampParam.MAGIC ==  ESP.getChipId()) { // First start? - need init 
 #else
   if (lampParam.MAGIC ==  ESP32getChipId()) {
 #endif
@@ -39,6 +43,7 @@ void applyParameters() {
   //  auto_change = lampParam.PLAYTIME;
   playMode = lampParam.MODE;
 }
+
 void applyColors() {
   setColorMode(lampParam.COLORMODE);
   lamp.setColors(0, storeColors);
